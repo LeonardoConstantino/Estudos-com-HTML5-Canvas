@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        main {
+            width: 98vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        canvas {
+            margin-top: 12px;
+            width: 350px;
+            height: 350px;
+            border: solid 1px red;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            width: 80vw;
+            gap: 8px;
+        }
+
+        input[type="button"] {
+            padding: 8px;
+            min-width: 150px;
+        }
+
+        .display-none {
+            display: none;
+        }
+
+        legend {
+            background-color: #ddd;
+            color: #121212;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        fieldset {
+            margin-top: 8px;
+            padding: 6px;
+            border-radius: 4px;
+            width: 80vw;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-content: center
+        }
+
+        input[type="range"] {
+            margin: 2px 8px;
+        }
+
+        label {
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 80vw;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            /* flex-wrap: wrap; */
+        }
+
+        pre {
+            white-space: pre-wrap;
+        }
+    </style>
+    <title>Canvas</title>
+</head>
+
+<body onload="desenha()">
+    <main>
+        <canvas id="tutorial" width="150" height="150"></canvas>
+        <div>
+            <!-- <input class="display-none" type="button" value="&lArr;" onclick="toggle_element()"> -->
+            <div class="container">
+                <div class="btn">
+                    <input type="button" value="Exemplo desenhando grafico" onclick="desenha()">
+                    <input type="button" value="Exemplo imagen lado a lado" onclick="desenha2()">
+                    <input type="button" value="Exemplo: enquadrar uma imagem" onclick="desenha3()">
+                </div>
+                <div class="capos display-none">
+                    <fieldset>
+                        <legend>Canto superior esquerdo da origem:</legend>
+                        <label> Origem X (sx)
+                            <input type="range" id="sx" min="-150" max="150" value="33"
+                                oninput="desenha3()"><span></span>
+                        </label>
+                        <label> Origem Y (sy)
+                            <input type="range" id="sy" min="-150" max="150" value="71"
+                                oninput="desenha3()"><span></span>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Altura e largura da origem:</legend>
+                        <label> Altura (sWidth)
+                            <input type="range" id="sWidth" min="-150" max="150" value="104"
+                                oninput="desenha3()"><span></span>
+                        </label>
+                        <label> largura (sHeight)
+                            <input type="range" id="sHeight" min="-150" max="150" value="124"
+                                oninput="desenha3()"><span></span>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Destino do canto superior esquerdo da imagem:</legend>
+                        <label> Distancia X (Dx)
+                            <input type="range" id="dx" min="-150" max="150" value="21"
+                                oninput="desenha3()"><span></span>
+                        </label>
+                        <label> Distancia Y (Dy)
+                            <input type="range" id="dy" min="-150" max="150" value="20"
+                                oninput="desenha3()"><span></span>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Tamanho da imagem de destino:</legend>
+                        <label> Altura (dWidth)
+                            <input type="range" id="dWidth" min="-150" max="150" value="87"
+                                oninput="desenha3()"><span></span>
+                        </label>
+                        <label> largura (dHeight)
+                            <input type="range" id="dHeight" min="-150" max="150" value="104"
+                                oninput="desenha3()"><span></span>
+                        </label>
+                    </fieldset>
+                </div>
+
+                <img class="display-none img-exp" src="https://mdn.mozillademos.org/files/225/Canvas_drawimage.jpg">
+
+                <div class="codigo">
+                    <code>
+                        <pre>
+
+                        </pre>
+                    </code>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="display-none">
+            <img id="source" src="rhino.jpg" width="300" height="227">
+            <img id="frame" src="Canvas_picture_frame.png" width="132" height="150">
+        </div>
+    </main>
+
+    <script>
+        const BODY = document.querySelector('body')
+        const PRE = document.querySelector('pre')
+        let canvas = document.querySelector('#tutorial')
+        const RANGES = document.querySelectorAll('input[type="range"]')
+        const SPANS = document.querySelectorAll('span')
+        const capos = document.querySelector('.capos')
+        const sx = document.querySelector('#sx')
+        const sy = document.querySelector('#sy')
+        const sWidth = document.querySelector('#sWidth')
+        const sHeight = document.querySelector('#sHeight')
+        const dx = document.querySelector('#dx')
+        const dy = document.querySelector('#dy')
+        const dWidth = document.querySelector('#dWidth')
+        const dHeight = document.querySelector('#dHeight')
+        var ctx = canvas.getContext("2d");
+        let largura = ctx.canvas.width
+        let altura = ctx.canvas.height
+
+        const toggle_element = () => {
+            // document.querySelectorAll('input[type="button"]')[0].classList.toggle("display-none")
+            // document.querySelectorAll('input[type="button"]')[1].classList.toggle("display-none")
+            // document.querySelectorAll('input[type="button"]')[2].classList.toggle("display-none")
+            document.querySelector('.img-exp').classList.toggle("display-none")
+            capos.classList.toggle("display-none")
+        }
+
+
+
+        const desenha = () => {
+            if (!capos.classList[1]) {
+                toggle_element()
+            }
+            var img = new Image();
+            ctx.clearRect(0, 0, largura, altura)
+            img.src = 'backdrop.png';
+            ctx.drawImage(img, 0, 0);
+            ctx.beginPath();
+            ctx.moveTo(30, 96);
+            ctx.lineTo(70, 66);
+            ctx.lineTo(103, 76);
+            ctx.lineTo(170, 15);
+            ctx.stroke();
+            PRE.innerHTML = `${desenha.toString().slice(8, -73)}`
+        }
+        const desenha2 = () => {
+            if (!capos.classList[1]) {
+                toggle_element()
+            }
+            var img = new Image();
+            ctx.clearRect(0, 0, largura, altura)
+            img.src = 'rhino.jpg'
+            for (var i = 0; i < 4; i++) {
+                for (var j = 0; j < 3; j++) {
+                    ctx.drawImage(img, j * 50, i * 38, 50, 38);
+                }
+            }
+            PRE.innerHTML = `${desenha2.toString().slice(8, -73)}`
+        }
+        const desenha3 = () => {
+            var img = new Image();
+            if (capos.classList[1] == "display-none") {
+                toggle_element()
+            }
+            ctx.clearRect(0, 0, largura, altura)
+            img = document.getElementById('source')
+            ctx.drawImage(img, sx.value, sy.value, sWidth.value, sHeight.value, dx.value, dy.value, dWidth.value,
+                dHeight.value)
+            img = document.getElementById('frame')
+            ctx.drawImage(img, 0, 0);
+            PRE.innerHTML = `${desenha3.toString().slice(8, -73)}`
+        }
+
+        for (let i = 0; i < RANGES.length; i++) {
+            SPANS[i].innerHTML = RANGES[i].value
+            RANGES[i].addEventListener('input', (e) => {
+                SPANS[i].innerHTML = e.target.value
+                // console.log(e.target.value)
+            }, true)
+        }
+
+
+
+        // BODY.addEventListener('load', () => {desenha()}, true)
+    </script>
+</body>
+
+</html>
