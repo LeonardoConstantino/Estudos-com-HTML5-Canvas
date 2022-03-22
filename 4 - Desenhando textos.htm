@@ -167,8 +167,14 @@
                     <label>
                         <input type="color" name="cor" id="corPreechimento" oninput="desenha()">preechimento
                     </label>
+                        <label>
+                            <input type="checkbox" name="corUnica" id="corUnica" oninput="desenha()">Somente uma cor?
+                        </label>
                     <label>
                         <input type="color" name="cor" id="corBorda" oninput="desenha()">borda
+                    </label>
+                    <label>
+                        <input type="color" name="corFundo" id="corFundo" value="#ffffff" oninput="desenha()">fundo
                     </label>
                     <label>
                         <input type="color" name="cor" id="corSombra" oninput="desenha()">sombra
@@ -206,6 +212,8 @@
         const CORPREECHIMENTO = document.querySelector('#corPreechimento')
         const CORBORDA = document.querySelector('#corBorda')
         const CORSOMBRA = document.querySelector('#corSombra')
+        const corUnica = document.querySelector('#corUnica')
+        const corFundo = document.querySelector('#corFundo')
         const EIXOX = document.querySelector('#eixoX')
         const EIXOY = document.querySelector('#eixoY')
         const DESFOQUE = document.querySelector('#desfoque')
@@ -227,10 +235,9 @@
         }
 
         const Preechimento = (context, line, x, y) => {
+                context.strokeText(line, x, y);
             if (ESTA_PREECHIDO.checked) {
                 context.fillText(line, x, y);
-            } else {
-                context.strokeText(line, x, y);
             }
         }
 
@@ -257,6 +264,7 @@
             ctx.shadowOffsetY = EIXOY.value
             ctx.shadowBlur = DESFOQUE.value
             ctx.shadowColor = CORSOMBRA.value
+          console.log(CORSOMBRA.value)
         }
         const resetarValores = () => {
             ctx.shadowOffsetX = 0
@@ -271,8 +279,9 @@
             const TMH = TAMANHO_FONTE.value
             const ITL = TEM_ITALICO.checked ? "italic" : "normal"
             const bld = TEM_BOLD.checked ? "bold" : "normal"
-
             resetarValores()
+            ctx.fillStyle = corFundo.value
+            ctx.fillRect(0, 0, largura, altura)
 
             if (TEM_SOMBRA.checked) {
                 sombra()
@@ -280,6 +289,11 @@
 
             ctx.fillStyle = CORPREECHIMENTO.value
             ctx.strokeStyle = CORBORDA.value
+
+            if (corUnica.checked) {
+              ctx.strokeStyle = CORPREECHIMENTO.value
+              CORBORDA.value = CORPREECHIMENTO.value
+            }
             ctx.font = `${ITL} ${bld} ${TMH}px ${setFont()}`;
             wrapText(ctx, TXT, 5, TMH / 1.2, largura - 5, TMH / 1.2)
 
@@ -296,7 +310,7 @@
 
 
         // BODY.addEventListener('load', () => {desenha()}, true)
-    </script>
+  </script>
 
 </body>
 
