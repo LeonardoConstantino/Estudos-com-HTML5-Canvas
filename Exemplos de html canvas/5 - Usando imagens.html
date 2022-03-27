@@ -167,8 +167,8 @@
         </div>
 
         <div class="display-none">
-            <img id="source" src="rhino.jpg" width="300" height="227">
-            <img id="frame" src="Canvas_picture_frame.png" width="132" height="150">
+            <img id="source" src="../imagens/rhino.jpg" width="300" height="227">
+            <img id="frame" src="../imagens/Canvas_picture_frame.png" width="132" height="150">
         </div>
     </main>
 
@@ -198,16 +198,14 @@
             document.querySelector('.img-exp').classList.toggle("display-none")
             capos.classList.toggle("display-none")
         }
-
-
-
+        
         const desenha = () => {
             if (!capos.classList[1]) {
                 toggle_element()
             }
             var img = new Image();
             ctx.clearRect(0, 0, largura, altura)
-            img.src = 'backdrop.png';
+            img.src = '../imagens/backdrop.png';
             ctx.drawImage(img, 0, 0);
             ctx.beginPath();
             ctx.moveTo(30, 96);
@@ -217,13 +215,14 @@
             ctx.stroke();
             PRE.innerHTML = `${desenha.toString().slice(8, -73)}`
         }
+
         const desenha2 = () => {
             if (!capos.classList[1]) {
                 toggle_element()
             }
             var img = new Image();
             ctx.clearRect(0, 0, largura, altura)
-            img.src = 'rhino.jpg'
+            img.src = '../imagens/rhino.jpg'
             for (var i = 0; i < 4; i++) {
                 for (var j = 0; j < 3; j++) {
                     ctx.drawImage(img, j * 50, i * 38, 50, 38);
@@ -231,6 +230,7 @@
             }
             PRE.innerHTML = `${desenha2.toString().slice(8, -73)}`
         }
+
         const desenha3 = () => {
             var img = new Image();
             if (capos.classList[1] == "display-none") {
@@ -252,9 +252,6 @@
                 // console.log(e.target.value)
             }, true)
         }
-
-
-
         // BODY.addEventListener('load', () => {desenha()}, true)
     </script>
 </body>
