@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            width: 100vw;
+            /* height: 100vh; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            flex-direction: column;
+            row-gap: 16px;
+            background-color: #ddd;
+            overflow-x: hidden;
+            padding-top: 16px;
+            /* margin-top: 10vh; */
+        }
+
+        main {
+            width: 80vw;
+            /* min-height: 90vh; */
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 10px;
+            background-color: #ccc;
+            box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        canvas {
+            height: 350px;
+        }
+
+        h1 {
+            padding-bottom: 20px;
+            color: #121212;
+        }
+
+        li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: rgb(209, 209, 209);
+            /* box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.5); */
+            border-radius: 10px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:visited,
+        a:link {
+            color: #121212;
+        }
+
+        a::after {
+            /* content: ' #'; */
+            opacity: 0;
+        }
+
+        span {
+            opacity: 0;
+            margin-left: 8px;
+            font-size: 20px;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        li:hover {
+            box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        li:hover>a {
+            text-decoration: underline;
+            color: blue;
+            font-weight: bold;
+        }
+
+        li:hover>a:visited {
+            text-decoration: underline;
+            color: #551a93;
+        }
+
+        li:hover>a::after {
+            opacity: 1;
+        }
+
+        li:hover>span {
+            opacity: 1;
+            text-decoration: none;
+        }
+    </style>
+    <title>Estudos com html canvas</title>
+</head>
+
+<body>
+
+    <canvas id="canvas" width="800" height="200"></canvas>
+
+    <main>
+        <h1>Exemplos de html canvas</h1>
+        <nav>
+            <ol>
+                <li>
+                    <a href="1 - Um sistema solar animado.html">
+                        Um sistema solar animado
+                    </a>
+                    <span>&#128279;</span>
+                </li>
+                <li>
+                    <a href="2 - Um relógio animado.html">
+                        Um relógio animado
+                    </a>
+                    <span>&#128279;</span>
+                </li>
+                <li>
+                    <a href="4 - Mouse seguindo a animação.html">
+                        Mouse seguindo a animação
+                    </a>
+                    <span>&#128279;</span>
+                </li>
+                <li>
+                    <a href="../../index.html">
+                        Voltar ao inicio
+                    </a>
+                    <span>&#128281;</span>
+                </li>
+            </ol>
+        </nav>
+    </main>
+    <script>
+        var img = new Image();
+
+        // User Variables - customize these to change the image being scrolled, its
+        // direction, and the speed.
+
+        img.src = 'img/Um panorama em loop/capitan_meadows_yosemite_national_park.jpg';
+        var CanvasXSize = 800;
+        var CanvasYSize = 200;
+        var speed = 30; // lower is faster
+        var scale = 1.05;
+        var y = -4.5; // vertical offset
+
+        // Main program
+
+        var dx = 0.75;
+        var imgW;
+        var imgH;
+        var x = 0;
+        var clearX;
+        var clearY;
+        var ctx;
+
+        img.onload = function () {
+            imgW = img.width * scale;
+            imgH = img.height * scale;
+
+            if (imgW > CanvasXSize) {
+                // image larger than canvas
+                x = CanvasXSize - imgW;
+            }
+            if (imgW > CanvasXSize) {
+                // image width larger than canvas
+                clearX = imgW;
+            } else {
+                clearX = CanvasXSize;
+            }
+            if (imgH > CanvasYSize) {
+                // image height larger than canvas
+                clearY = imgH;
+            } else {
+                clearY = CanvasYSize;
+            }
+
+            // get canvas context
+            ctx = document.getElementById('canvas').getContext('2d');
+
+            // set refresh rate
+            return setInterval(draw, speed);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, clearX, clearY); // clear the canvas
+
+            // if image is <= Canvas Size
+            if (imgW <= CanvasXSize) {
+                // reset, start from beginning
+                if (x > CanvasXSize) {
+                    x = -imgW + x;
+                }
+                // draw additional image1
+                if (x > 0) {
+                    ctx.drawImage(img, -imgW + x, y, imgW, imgH);
+                }
+                // draw additional image2
+                if (x - imgW > 0) {
+                    ctx.drawImage(img, -imgW * 2 + x, y, imgW, imgH);
+                }
+            }
+
+            // image is > Canvas Size
+            else {
+                // reset, start from beginning
+                if (x > (CanvasXSize)) {
+                    x = CanvasXSize - imgW;
+                }
+                // draw additional image
+                if (x > (CanvasXSize - imgW)) {
+                    ctx.drawImage(img, x - imgW + 1, y, imgW, imgH);
+                }
+            }
+            // draw image
+            ctx.drawImage(img, x, y, imgW, imgH);
+            // amount to move
+            x += dx;
+        }
+    </script>
+</body>
+
+</html>
