@@ -95,8 +95,11 @@
 
         <script>
             const BODY = document.querySelector('body')
-            let canvas = document.querySelector('#tutorial');
             const PRE = document.querySelector('pre')
+            const MITERLIMIT = document.querySelector('#miterLimit')
+            const LINHA = document.querySelector('#linha')
+
+            let canvas = document.querySelector('#tutorial')
             var ctx = canvas.getContext("2d");
             let largura = ctx.canvas.width
             let altura = ctx.canvas.height
@@ -245,9 +248,9 @@
                 PRE.innerHTML = `${desenha7.toString().slice(8, -73)}`
             }
             const desenha8 = () => {
+                // Clear canvas
                 resetValoresCanvas()
 
-                // Clear canvas
 
                 // Draw guides
                 ctx.strokeStyle = '#09f';
@@ -256,7 +259,7 @@
 
                 // Set line styles
                 ctx.strokeStyle = '#000';
-                ctx.lineWidth = document.getElementById('linha').value
+                ctx.lineWidth = LINHA.value
 
 
                 // Draw lines
@@ -269,8 +272,8 @@
                 ctx.stroke();
 
                 // check input
-                if (document.getElementById('miterLimit').value.match(/\d+(\.\d+)?/)) {
-                    ctx.miterLimit = parseFloat(document.getElementById('miterLimit').value)
+                if (MITERLIMIT.value.match(/\d+(\.\d+)?/)) {
+                    ctx.miterLimit = parseFloat(MITERLIMIT.value)
                 } else {
                     alert('Value must be a positive number');
                 }
@@ -283,6 +286,11 @@
                     ctx.lineTo(Math.pow(i, 1.5) * 2, 75 + dy);
                 }
                 ctx.stroke();
+                if (MITERLIMIT.value > 5 && LINHA.value > 20) {
+                    ctx.fillStyle = '#ddd'
+                }
+                ctx.fillText(`Miter limit ${MITERLIMIT.value}`, largura-60, altura-11)
+                ctx.fillText(`Linha ${LINHA.value}`, largura-60, altura-1)
                 PRE.innerHTML = `${desenha8.toString().slice(8, -73)}`
             }
             const desenha9 = () => {
