@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        main {
+            width: 95vw;
+            /* height: 100vh; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            flex-direction: column;
+            row-gap: 12px;
+            padding-top: 8px;
+        }
+
+        canvas {
+            width: 400px;
+            height: 400px;
+            border: solid 1px red;
+        }
+
+        .botoes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            width: 70vw;
+            gap: 8px;
+        }
+
+        input[type="button"] {
+            padding: 8px;
+            min-width: 150px;
+        }
+
+        .codigo {
+            overflow: auto;
+        }
+
+        h2 {
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+    <title>Canvas</title>
+</head>
+
+<body onload="timeLoop()">
+    <main>
+        <canvas id="tutorial" width="150" height="150"></canvas>
+        <div class="botoes">
+            <input type="button" value="Pausar" onclick="pausar()">
+            <input type="button" value="Continuar" onclick="timeLoop()">
+        </div>
+
+        <div class="codigo">
+            <h2>Código do desenho</h2>
+            <p>
+                <code>
+                    <pre>
+                    </pre>
+                </code>
+            </p>
+        </div>
+
+        <script>
+            const BODY = document.querySelector('body')
+            const PRE = document.querySelector('pre')
+            let ini = true
+
+            let canvas = document.querySelector('#tutorial')
+            var ctx = canvas.getContext("2d");
+            let largura = ctx.canvas.width
+            let altura = ctx.canvas.height
+            let intervalo
+
+            const desenha = () => {
+                ctx.save();
+                ctx.clearRect(0, 0, largura, altura)
+                ctx.fillRect(0, 0, 150, 150);
+                if (ini) {
+                    ctx.translate(75, 75);
+                    ini = false
+                }
+
+                // Create a circular clipping path
+                ctx.beginPath();
+                ctx.arc(0, 0, 60, 0, Math.PI * 2, true);
+                ctx.clip();
+
+                // draw background
+                var lingrad = ctx.createLinearGradient(0, -75, 0, 75);
+                lingrad.addColorStop(0, '#232256');
+                lingrad.addColorStop(1, '#143778');
+
+                ctx.fillStyle = lingrad;
+                ctx.fillRect(-75, -75, 150, 150);
+
+                // draw stars
+                for (var j = 1; j < 50; j++) {
+                    ctx.save();
+                    ctx.fillStyle = '#fff';
+                    ctx.translate(75 - Math.floor(Math.random() * 150),
+                        75 - Math.floor(Math.random() * 150));
+                    drawStar(ctx, Math.floor(Math.random() * 4) + 2);
+                    ctx.restore();
+                }
+
+                
+
+                function drawStar(ctx, r) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(r, 0);
+                    for (var i = 0; i < 9; i++) {
+                        ctx.rotate(Math.PI / 5);
+                        if (i % 2 === 0) {
+                            ctx.lineTo((r / 0.525731) * 0.200811, 0);
+                        } else {
+                            ctx.lineTo(r, 0);
+                        }
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                PRE.innerHTML = `${desenha.toString().slice(8, -73)}`
+            }
+            const pausar = ()=>{
+                clearInterval(intervalo)
+            }
+
+            const timeLoop = () => {
+                intervalo = setInterval(() => {
+                    desenha()
+                    // clearInterval(intervalo)
+                }, 100)
+            }
+
+
+            // BODY.addEventListener('load', () => {desenha()}, true)
+        </script>
+    </main>
+</body>
+
+</html>
