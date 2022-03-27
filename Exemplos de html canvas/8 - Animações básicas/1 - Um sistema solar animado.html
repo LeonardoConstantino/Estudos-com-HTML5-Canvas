@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            width: 100vw;
+            /* height: 100vh; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            flex-direction: column;
+            row-gap: 16px;
+            background-color: #ddd;
+            overflow-x: hidden;
+            padding-top: 16px;
+            /* margin-top: 10vh; */
+        }
+
+        main {
+            width: 80vw;
+            /* min-height: 90vh; */
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 10px;
+            background-color: #ccc;
+            box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        canvas {
+            width: 450px;
+        }
+
+        h1 {
+            padding-bottom: 20px;
+            color: #121212;
+        }
+
+        li {
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: rgb(209, 209, 209);
+            /* box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.5); */
+            border-radius: 10px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:visited,
+        a:link {
+            color: #121212;
+        }
+
+        a::after {
+            /* content: " &#x1F517;"; */
+            opacity: 0;
+        }
+
+        span {
+            opacity: 0;
+            margin-left: 8px;
+            font-size: 20px;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        li:hover {
+            box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        li:hover>a {
+            text-decoration: underline;
+            color: blue;
+            font-weight: bold;
+        }
+
+        li:hover>a:visited {
+            text-decoration: underline;
+            color: #551a93;
+        }
+
+        li:hover>a::after {
+            opacity: 1;
+        }
+
+        li:hover>span {
+            opacity: 1;
+            text-decoration: none;
+        }
+    </style>
+    <title>Estudos com html canvas</title>
+</head>
+
+<body>
+
+    <canvas id="canvas" width="300" height="300"></canvas>
+
+    <main>
+        <h1>Exemplos de animações básicas</h1>
+        <nav>
+            <ul>
+                <li>
+                    <a href="2 - Um relógio animado.html">
+                        Um relógio animado
+                    </a>
+                    <span>&#128279;</span>
+                </li>
+                <li>
+                    <a href="3 - Um panorama em loop.html">
+                        Um panorama em loop.html
+                    </a>
+                    <span>&#128279;</span>
+                </li>
+                <li>
+                    <a href="4 - Mouse seguindo a animação.html">
+                        Mouse seguindo a animação
+                    </a>
+                    <span>&#128279;</span>
+                </li>
+                <li>
+                    <a href="../../index.html">
+                        Voltar ao inicio
+                    </a>
+                    <span>&#128281;</span>
+                </li>
+            </ul>
+        </nav>
+    </main>
+    <script>
+        var sun = new Image();
+        var moon = new Image();
+        var earth = new Image();
+
+        function init() {
+            sun.src = 'img/sistema solar/canvas_sun (1).png';
+            moon.src = 'img/sistema solar/canvas_moon (1).png';
+            earth.src = 'img/sistema solar/canvas_earth (1).png';
+            window.requestAnimationFrame(draw);
+        }
+
+        function draw() {
+            var ctx = document.getElementById('canvas').getContext('2d');
+
+            ctx.globalCompositeOperation = 'destination-over';
+            ctx.clearRect(0, 0, 300, 300); // clear canvas
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.strokeStyle = 'rgba(0, 153, 255, 0.4)';
+            ctx.save();
+            ctx.translate(150, 150);
+
+            // Earth
+            var time = new Date();
+            ctx.rotate(((2 * Math.PI) / 60) * time.getSeconds() + ((2 * Math.PI) / 60000) * time.getMilliseconds());
+            ctx.translate(105, 0);
+            ctx.fillRect(0, -12, 40, 24); // Shadow
+            ctx.drawImage(earth, -12, -12);
+
+            // Moon
+            ctx.save();
+            ctx.rotate(((2 * Math.PI) / 6) * time.getSeconds() + ((2 * Math.PI) / 6000) * time.getMilliseconds());
+            ctx.translate(0, 28.5);
+            ctx.drawImage(moon, -3.5, -3.5);
+            ctx.restore();
+
+            ctx.restore();
+
+            ctx.beginPath();
+            ctx.arc(150, 150, 105, 0, Math.PI * 2, false); // Earth orbit
+            ctx.stroke();
+
+            ctx.drawImage(sun, 0, 0, 300, 300);
+
+            window.requestAnimationFrame(draw);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
