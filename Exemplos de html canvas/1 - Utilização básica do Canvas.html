@@ -1,33 +1,138 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        *{ margin: 0; padding: 0; box-sizing: border-box; outline: none; font-family: 'Roboto', sans-serif; }
-        body{  width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; align-content: center }
-        canvas{ width: 400px; height: 400px; border: solid 1px red; }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            width: 100vw;
+            /* height: 100vh; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            flex-direction: column;
+        }
+
+        canvas {
+            width: 400px;
+            height: 400px;
+            border: solid 1px red;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 45px;
+        }
+
+        input[type="range"] {
+            width: 350px;
+        }
     </style>
     <title>Canvas</title>
 </head>
+
 <body onload="desenha()">
-  <canvas id="tutorial" width="250" height="250"></canvas>
+    <canvas id="tutorial" width="250" height="250"></canvas><br>
+    <div>
+        <div>
+            <h4>Quadrado 1</h4>
+            <label>
+                posicao x quadro 1
+                <input type="range" name="posXQuadrado1" id="posXQuadrado1" value="10" min="0" max="250"
+                    oninput="desenha()">
+                <span></span>
+            </label>
+            <label>
+                posicao y quadro 1
+                <input type="range" name="posYQuadrado1" id="posYQuadrado1" value="10" min="0" max="250"
+                    oninput="desenha()">
+                <span></span>
+            </label>
+            <label>
+                tamanho x quadro 1
+                <input type="range" name="tamXQuadrado1" id="tamXQuadrado1" value="55" min="0" max="250"
+                    oninput="desenha()">
+                <span></span>
+            </label>
+            <label>
+                tamanho y quadro 1
+                <input type="range" name="tamYQuadrado1" id="tamYQuadrado1" value="50" min="0" max="250"
+                    oninput="desenha()">
+                <span></span>
+            </label>
+        </div>
+        <div>
+            <h4>Quadrado 2</h4>
+            <label>
+                posicao x quadro 1
+                <input type="range" name="posXQuadrado2" id="posXQuadrado2" value="30" min="0" max="250"
+                    oninput="desenha()">
+                <span></span>
+            </label>
+            <label>
+                posicao y quadro 1
+                <input type="range" name="posYQuadrado2" id="posYQuadrado2" value="30" min="0" max="250"
+                    oninput="desenha()">
+                <span></span>
+            </label>
+            <label>
+                tamanho x quadro 1
+                <input type="range" name="tamXQuadrado2" id="tamXQuadrado2" value="55" min="0" max="250"
+                    oninput="desenha()">
+                <span></span>
+            </label>
+            <label>
+                tamanho y quadro 1
+                <input type="range" name="tamYQuadrado2" id="tamYQuadrado2" value="50" min="0" max="250"
+                    oninput="desenha()">
+                <span></span>
+            </label>
+        </div>
+    </div>
 
-  <script>
-      const BODY = document.querySelector('body')
-      let canvas = document.querySelector('#tutorial');
-      var ctx = canvas.getContext("2d");
+    <script>
+        const BODY = document.querySelector('body')
+        const RANGES = document.querySelectorAll('input[type="range"]')
+        const SPANS = document.querySelectorAll('span')
+        let canvas = document.querySelector('#tutorial')
+        var ctx = canvas.getContext("2d");
+        let largura = ctx.canvas.width
+        let altura = ctx.canvas.height
 
-      const desenha = () => {
-          ctx.fillStyle = "rgb(200,0,0)";
-          ctx.fillRect (10, 10, 55, 50);
+        const desenha = () => {
+            ctx.clearRect(0, 0, largura, altura)
+            ctx.fillStyle = "rgb(200,0,0)";
+            ctx.fillRect(RANGES[0].value, RANGES[1].value, RANGES[2].value, RANGES[3].value);
 
-          ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
-          ctx.fillRect (30, 30, 55, 50);
-      }
+            ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+            ctx.fillRect(RANGES[4].value, RANGES[5].value, RANGES[6].value, RANGES[7].value);
+        }
 
-      // BODY.addEventListener('load', () => {desenha()}, true)
-  </script>
+        for (let i = 0; i < RANGES.length; i++) {
+            SPANS[i].innerHTML = RANGES[i].value
+            RANGES[i].addEventListener('input', (e) => {
+                SPANS[i].innerHTML = e.target.value
+                // console.log(e.target.value)
+            }, true)
+        }
+
+        // BODY.addEventListener('load', () => {desenha()}, true)
+    </script>
 </body>
+
 </html>
