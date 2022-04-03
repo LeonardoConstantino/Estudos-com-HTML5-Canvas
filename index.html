@@ -185,6 +185,7 @@
         let altura = ctx.canvas.height
         let quantidade = 100
         let gravidade = 2
+        let vento = 0.5;
         let tamanhoX = 3
         let tamanhoY = 3
         let velRotação = 0.04
@@ -235,6 +236,15 @@
         const atualiza_quadros = (i) => {
             quadrados[i].y = quadrados[i].y + gravidade + quadrados[i].peso
             quadrados[i].rotação += quadrados[i].velocidadeRotação
+
+              if (i % 5 === 4) {
+                    if (quadrados[i].x > largura / 2) {
+                        quadrados[i].x -= vento * quadrados[i].peso * Math.random();
+                    }
+                    if (quadrados[i].x < largura / 2) {
+                        quadrados[i].x += vento * quadrados[i].peso * Math.random();
+                    }
+              }
 
             if (quadrados[i].y > altura - quadrados[i].tamanhoY) {
                 quadrados[i].y = 0
